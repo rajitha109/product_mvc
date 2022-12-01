@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Test2";
+}
+<h2>Test2</h2>
+
+
+<table id="tblProduct2" class="table table-bordered table-striped table-responsive table-hover"></table>
+<hr />
+<table id="tblSeller2" class="table table-bordered table-striped table-responsive table-hover">
+    
+</table>
+<script>
+    $(document).ready(function () {
+        LoadData();
+
+    });
+
+    
+    function LoadData() {
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetData","Product")",
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                var products = result.ProductList;
+                var sellers = result.SellerList;
+                extractDataForTables(products);
+                extractDataForSellerTables(sellers);
+                
+
+            }
+
+        });
+
+    }
+
+    function extractDataForTables(products) {
+        drawProductDataTable(products);
+    }
+
+    function drawProductDataTable(values) {
+        var oTable = $('#tblProduct2').DataTable({
+            data: values,
+            columns: [
+                {
+                    title: 'Product Id',
+                    data: "ProductID",
+
+                },
+                {
+                    title: 'Product Name',
+                    data: "ProductName",
+
+                },
+                {
+                    title: 'Price ',
+                    data: "Price",
+
+                },
+                {
+                    title: 'Count',
+                    data: "Count",
+
+                }
+            ],
+
+        });
+
+    }
+
+
+    function extractDataForSellerTables(products) {
+        drawSellerDataTable(products);
+    }
+
+    function drawSellerDataTable(values) {
+        var oTable = $('#tblSeller2').DataTable({
+            data: values,
+            columns: [
+                {
+                    title: 'Seller Id',
+                    data: "Id",
+
+                },
+                {
+                    title: 'Seller Name',
+                    data: "Name",
+
+                },
+                
+            ],
+
+        });
+
+    }
+
+
+
+
+
+
+
+</script>

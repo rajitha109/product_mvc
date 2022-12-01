@@ -1,0 +1,83 @@
+﻿@{
+                /**/
+
+                ViewData["Title"] = "All Details";
+}
+
+<h1>AllDetails</h1>
+
+<h2>Product Details</h2>
+
+
+    <table id="tblProduct" class="table table-bordered table-striped table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <hr />
+
+        <h2>Seller Details</h2>
+        <table id="tblSeller" class="table table-bordered table-striped table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Seller Name</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    <script>
+            $(
+                function () {
+                    LoadData();
+                }
+            );
+
+            function LoadData() {
+                    $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetData")',
+                    dataType: 'json',
+                    success: function (data) {
+                        var items = '';
+                        $.each(data.ProductList, function (i, item) {
+                            var rows = "<tr>"
+                                + "<td >" + item.ProductID + "</td>"
+                                + "<td >" + item.ProductName + "</td>"
+                                + "<td >" + item.Price + "</td>"
+                                + "<td>" + item.Count + "</td>"
+                            + "</tr>";
+                            $('#tblProduct tbody').append(rows);
+                        });
+
+                        $.each(data.SellerList, function (i, item) {
+                            var rows = "<tr>"
+                                + "<td >" + item.Id + "</td>"
+                                + "<td >" + item.Name + "</td>"
+                                + "</tr>";
+                            $('#tblSeller tbody').append(rows);
+                        });
+
+
+                    }
+                });
+                return false;
+
+            }
+        </script>
+
+
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2>Index</h2>
+<table id="tblProduct" class="table table-bordered table-striped table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+
+<script>
+    $(function () {
+        LoadData();
+
+    });
+
+
+    function LoadData() {        
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetProducts","Product")',
+            dataType: 'json',           
+            success: function (data) {
+                var items = '';
+                $.each(data, function (i, item) {
+                    var rows = "<tr>"
+                        + "<td>" + item.ProductID + "</td>"
+                        + "<td>" + item.ProductName + "</td>"
+                        + "<td>" + item.Price + "</td>"
+                        + "<td>" + item.Count + "</td>"
+                    + "</tr>";
+                    $('#tblProduct tbody').append(rows);
+                });
+            }
+        });
+        return false;
+    }
+</script>

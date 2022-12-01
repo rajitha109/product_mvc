@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+}
+<h2>Test</h2>
+
+
+<table id="tblProduct2" class="table table-bordered table-striped table-responsive table-hover">
+    
+</table>
+<script>
+    $(document).ready(function () {
+        LoadData();
+
+    });
+
+    @*function LoadData() {
+
+        //alert("Hello");
+
+        $('#tblProduct2').DataTable(
+            {
+                ajax: {
+                    url: '@Url.Action("GetProducts", "Product")',
+                    dataSrc:'',
+
+                },
+                columns: [
+                    {
+                        title: 'Product Id',
+                        data:'ProductID'
+                    },
+                    {
+                        title: 'Product Name',
+                        data: 'ProductName'
+                    },
+                    {
+                        title: 'Price',
+                        data: 'Price'
+                    },
+                    {
+                        title: 'Count',
+                        data: 'Count'
+                    },
+
+                ]
+
+            }
+        );
+
+        return false;
+    }*@
+
+
+    function LoadData() {
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetProducts","Product")",
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                extractDataForTables(result);
+
+            }
+
+        });
+
+    }
+
+
+    function extractDataForTables(products) {
+        drawProductDataTable(products);
+    }
+
+    function drawProductDataTable(values) {
+        var oTable = $('#tblProduct2').DataTable({
+            data: values,
+            columns: [
+                {
+                    data: "ProductID",
+                    
+                },
+                {
+                    data: "ProductName",
+
+                },
+                {
+                    data: "Price",
+
+                },
+                {
+                    data: "Count",
+
+                }
+            ],
+
+        })
+
+    }
+
+
+
+
+</script>
