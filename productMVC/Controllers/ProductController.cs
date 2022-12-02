@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using System;
 
 namespace productMVC.Controllers
 {
@@ -13,29 +14,81 @@ namespace productMVC.Controllers
     {
         string connectionString = @"Data Source=DESKTOP-6U7CQKC;Initial Catalog=MvcDemoDb;Integrated Security=True";
         // GET: Product
+        
         public ActionResult Index()
         {
             
-            return View();
-
-
+            return View();            
         }
-        //Get Product Details
-        public ActionResult GetProducts()
+
+
+        //Get All Product Details
+        public ActionResult GetAllProducts()
         {
+
             var productsData = new List<ProductModel>();
             using (SqlConnection sqlConnect = new SqlConnection(connectionString))
             {
                 sqlConnect.Open();
                 StringBuilder returnsValue = new StringBuilder();
-                SqlCommand sqlCmd = new SqlCommand("getAllProduct", sqlConnect);
+                SqlCommand sqlCmd = new SqlCommand("getAllProduct", sqlConnect);                
+                sqlCmd.CommandType = CommandType.StoredProcedure;                
                 sqlCmd.CommandType = CommandType.StoredProcedure;
+
+
                 SqlDataAdapter sqlData = new SqlDataAdapter(sqlCmd);
 
                 using (var xmlReader = sqlCmd.ExecuteXmlReader())
                 {
                     while (xmlReader.Read())
                     {
+
+                        string xmlString = xmlReader.ReadOuterXml();
+                        returnsValue.Append(xmlString);
+                    }
+                }
+                var data = returnsValue.ToString();
+                var xmlDocument = XDocument.Parse(data);
+                var productsXml = xmlDocument.Elements("Products").Elements("Product");
+
+                productsData = productsXml.Select((s) =>
+                new ProductModel()
+                {
+                    ProductID = (s.Attribute("ProductID") != null) ? int.Parse(s.Attribute("ProductID").Value) : 0,
+                    ProductName = s.Attribute("ProductName").Value.ToString(),
+                    Price = decimal.Parse(s.Attribute("Price").Value),
+                    Count = int.Parse(s.Attribute("Counter").Value)
+                }).ToList();
+
+
+                sqlConnect.Close();
+            }
+            return Json(productsData, JsonRequestBehavior.AllowGet);
+        }
+
+        //Get Product Details
+        public ActionResult GetProducts(int ProductId)
+        {
+            
+            var productsData = new List<ProductModel>();
+            using (SqlConnection sqlConnect = new SqlConnection(connectionString))
+            {
+                sqlConnect.Open();
+                StringBuilder returnsValue = new StringBuilder();
+                //SqlCommand sqlCmd = new SqlCommand("getAllProduct", sqlConnect);                
+                //sqlCmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand sqlCmd = new SqlCommand("getByProudctId", sqlConnect);
+                sqlCmd.Parameters.Add("@productId", SqlDbType.Int).Value = ProductId;
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+                ViewData["productId"] = 1;
+
+                SqlDataAdapter sqlData = new SqlDataAdapter(sqlCmd);               
+
+                using (var xmlReader = sqlCmd.ExecuteXmlReader())
+                {
+                    while (xmlReader.Read())
+                    {
+                       
                         string xmlString = xmlReader.ReadOuterXml();
                         returnsValue.Append(xmlString);
                     }

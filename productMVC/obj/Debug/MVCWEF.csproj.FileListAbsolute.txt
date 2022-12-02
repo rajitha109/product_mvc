@@ -58,3 +58,4 @@ D:\VStudio\VS17\productMVC\productMVC\obj\Debug\MVCWEF.csproj.CoreCompileInputs.
 D:\VStudio\VS17\productMVC\productMVC\obj\Debug\MVCWEF.csproj.CopyComplete
 D:\VStudio\VS17\productMVC\productMVC\obj\Debug\MVCWEF.dll
 D:\VStudio\VS17\productMVC\productMVC\obj\Debug\MVCWEF.pdb
+D:\VStudio\VS17\productMVC\productMVC\bin\Rotativa.dll

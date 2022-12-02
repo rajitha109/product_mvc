@@ -3,25 +3,41 @@
     ViewBag.Title = "Test";
 }
 <h2>Test</h2>
+<div id="productid"></div>
 
+<label for="products">Select Product ID:</label>
 
-<table id="tblProduct2" class="table table-bordered table-striped table-responsive table-hover">
-    
-</table>
+<select name="products" id="products">
+    <option value="1" selected>1</option>
+    <option value="2" >2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+</select>
+
+<table id="tblProduct2" class="table table-bordered table-striped table-responsive table-hover"></table>
 <script>
+    
     $(document).ready(function () {
-        LoadData();
+        //alert("Hello");
+        //LoadAllData();       
+        LoadData(1);
+        
+        $("#products").change(function () {
+           var values = $("#products option:selected").text();                       
+           LoadData(values);
+
+        });
+         
 
     });
 
-    @*function LoadData() {
-
+    function LoadAllData() {
         //alert("Hello");
-
+        //1st Method
         $('#tblProduct2').DataTable(
             {
                 ajax: {
-                    url: '@Url.Action("GetProducts", "Product")',
+                    url: '@Url.Action("GetAllProducts", "Product")',
                     dataSrc:'',
 
                 },
@@ -47,23 +63,22 @@
 
             }
         );
-
+       
         return false;
-    }*@
+    }
 
 
-    function LoadData() {
+    function LoadData(productId) {
         $.ajax({
             type: 'GET',
             url: "@Url.Action("GetProducts","Product")",
             contentType: 'application/json; charset=utf-8',
-            success: function (result) {
-                extractDataForTables(result);
+            data: { "productId": productId},
+            success: function (result) {                
+                extractDataForTables(result);          
 
             }
-
         });
-
     }
 
 
@@ -76,25 +91,29 @@
             data: values,
             columns: [
                 {
+                    title: 'Product Id',
                     data: "ProductID",
-                    
+
                 },
                 {
+                    title: 'Product Name',
                     data: "ProductName",
 
                 },
                 {
+                    title: 'Price',
                     data: "Price",
 
                 },
                 {
+                    title: 'Count',
                     data: "Count",
 
                 }
             ],
 
-        })
-
+        });
+        oTable.destroy();
     }
 
 

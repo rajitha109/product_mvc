@@ -4,6 +4,18 @@
 }
 
 
+@*<div class="demo-container">
+        <div id="gauge-demo">
+            <div id="gauge"></div>
+            <div id="seasons"></div>
+            <div id="buttonGroup">
+                <div id="export"></div>
+            </div>
+        </div>
+    </div>*@
+
+
+
 <h2>Index</h2>
 <table id="tblProduct" class="table table-bordered table-striped table-responsive table-hover">
     <thead>
@@ -18,18 +30,134 @@
 </table>
 
 
+
+
 <script>
-    $(function () {
+    @*@$(function () {
         LoadData();
 
-    });
+    });*@
 
 
-    function LoadData() {        
+    @*function LoadData() {
         $.ajax({
             type: 'GET',
             url: '@Url.Action("GetProducts","Product")',
-            dataType: 'json',           
+            dataType: 'json',
+            success: function (data) {
+                var items = '';
+                $.each(data, function (i, item) {
+                    var rows = "<tr>"
+                        + "<td>" + item.ProductID + "</td>"
+                        + "<td>" + item.ProductName + "</td>"
+                        + "<td>" + item.Price + "</td>"
+                        + "<td>" + item.Count + "</td>"
+                    + "</tr>";
+                    $('#tblProduct tbody').append(rows);
+                });
+            }
+        });
+        return false;
+    }*@
+
+
+    $(() => {
+        LoadData();
+        const dataSource = [{
+            name: 'Summer',
+            mean: 35,
+            min: 28,
+            max: 38,
+        }, {
+            name: 'Autumn',
+            mean: 24,
+            min: 20,
+            max: 32,
+        }, {
+            name: 'Winter',
+            mean: 18,
+            min: 16,
+            max: 23,
+        }, {
+            name: 'Spring',
+            mean: 27,
+            min: 18,
+            max: 31,
+        }];
+
+        alert("Hello");
+        const gauge = $('#gauge').dxCircularGauge({
+            scale: {
+                startValue: 10,
+                endValue: 40,
+                tickInterval: 5,
+                label: {
+                    customizeText(arg) {
+                        return `${arg.valueText} °C`;
+                    },
+                },
+            },
+            rangeContainer: {
+                ranges: [
+                    { startValue: 10, endValue: 20, color: '#0077BE' },
+                    { startValue: 20, endValue: 30, color: '#E6E200' },
+                    { startValue: 30, endValue: 40, color: '#77DD77' },
+                ],
+            },
+            tooltip: { enabled: true },
+            title: {
+                text: 'Temperature in the Greenhouse',
+                font: { size: 28 },
+            },
+            value: dataSource[0].mean,
+            subvalues: [dataSource[0].min, dataSource[0].max],
+        }).dxCircularGauge('instance');
+
+        $('#seasons').dxSelectBox({
+            width: 150,
+            dataSource,
+            displayExpr: 'name',
+            value: dataSource[0],
+            onSelectionChanged(e) {
+                gauge.option('value', e.selectedItem.mean);
+                gauge.option('subvalues', [e.selectedItem.min, e.selectedItem.max]);
+            },
+        });
+
+
+
+        $('#seasons').dxSelectBox({
+            width: 150,
+            dataSource,
+            displayExpr: 'name',
+            value: dataSource[0],
+            onSelectionChanged(e) {
+                gauge.option('value', e.selectedItem.mean);
+                gauge.option('subvalues', [e.selectedItem.min, e.selectedItem.max]);
+            },
+        });
+
+
+        /*$('#export').dxButton({
+            icon: 'export',
+            text: 'Export',
+            onClick() {
+                gauge.exportTo('gauge1', 'png');
+            },
+        });*/
+
+
+
+
+
+
+
+    });
+    function LoadData() {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetProducts","Product")',
+            dataType: 'json',
             success: function (data) {
                 var items = '';
                 $.each(data, function (i, item) {
@@ -45,4 +173,6 @@
         });
         return false;
     }
+
+
 </script>

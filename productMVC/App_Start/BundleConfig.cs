@@ -11,6 +11,9 @@ namespace productMVC
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                       "~/Scripts/site.js"));
+
             /*bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             "~/Scripts/jquery-ui.js"));*/
 
